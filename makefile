@@ -28,6 +28,7 @@ CALSRC  	= $(wildcard src/Calibrator/*.cpp)
 FILESRC 	= $(wildcard src/File/*.cpp)
 DOWNSRC 	= $(wildcard src/Downscaler/*.cpp)
 PARSRC 	= $(wildcard src/ParameterFile/*.cpp)
+WSSRC    = $(wildcard src/weather_symbol/*.cpp)
 DRVSRC  	= src/Driver/Gridpp.cpp
 DRVOBJ_O	= $(BUILDDIR_O)/Driver/Gridpp.o
 DRVOBJ_D	= $(BUILDDIR_D)/Driver/Gridpp.o
@@ -37,7 +38,7 @@ KFOBJ_D	= $(BUILDDIR_D)/Driver/Kf.o
 TRAINRC  = src/Driver/Train.cpp
 TRAINOBJ_O= $(BUILDDIR_O)/Driver/Train.o
 TRAINOBJ_D= $(BUILDDIR_D)/Driver/Train.o
-SRC     	= $(CORESRC) $(CALSRC) $(FILESRC) $(DOWNSRC) $(PARSRC)
+SRC     	= $(CORESRC) $(CALSRC) $(FILESRC) $(DOWNSRC) $(PARSRC) $(WSSRC)
 HEADERS 	= $(SRC:.cpp=.h)
 OBJ0_O   = $(patsubst src/%,$(BUILDDIR_O)/%,$(SRC))
 OBJ0_D  	= $(patsubst src/%,$(BUILDDIR_D)/%,$(SRC))
@@ -57,7 +58,7 @@ all: gridpp gridpp_train gridpp_kf
 debug: $(EXE_D)
 
 $(BUILDDIR):
-	@mkdir build build/Calibrator build/Downscaler build/File build/ParameterFile build/Driver build/Testing
+	@mkdir build build/Calibrator build/Downscaler build/File build/ParameterFile build/Driver build/Testing 
 
 $(BUILDDIR_O)/%.o : src/%.cpp $(INCS)
 	$(CXX) $(CFLAGS_O) $(IFLAGS) -c $< -o $@

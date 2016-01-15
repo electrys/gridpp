@@ -65,6 +65,7 @@ class Calibrator : public Scheme {
 #include "Qq.h"
 #include "Regression.h"
 #include "Sort.h"
+#include "MetnoSymbol.h"
 #include "WindDirection.h"
 #include "Window.h"
 #include "Zaga.h"

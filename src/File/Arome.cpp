@@ -385,6 +385,9 @@ std::string FileArome::getVariableName(Variable::Type iVariable) const {
    else if(iVariable == Variable::LwinAcc) {
       return "integral_of_surface_downwelling_longwave_flux_in_air_wrt_time";
    }
+   else if(iVariable == Variable::Symbol) {
+      return "weather_symbol";
+   }
    else if(iVariable == Variable::Fake) {
       return "fake";
    }

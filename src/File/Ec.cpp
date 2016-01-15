@@ -352,6 +352,9 @@ std::string FileEc::getVariableName(Variable::Type iVariable) const {
    else if(iVariable == Variable::RH) {
       return "relative_humidity_2m";
    }
+   else if(iVariable == Variable::Symbol) {
+      return "weather_symbol";
+   }
    return "";
 }
 

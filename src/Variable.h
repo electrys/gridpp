@@ -36,6 +36,7 @@ class Variable {
          QNH          = 88,   // Pressure reduced to sea-level using standard atmosphere (ICAO) (pa)
          SwinAcc      = 100,  // Accumulated incoming shortware radiation
          LwinAcc      = 101,  // Accumulated incoming longwave radiation
+         Symbol       = 200,  // Weather symbol code
          Fake         = 1000, // Fake variable used for testing
          None         = -999  // Non-existant variable
       };

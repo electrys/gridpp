@@ -175,6 +175,11 @@ Calibrator* Calibrator::getScheme(std::string iName, const Options& iOptions) {
 
       return c;
    }
+   else if(iName == "metnoSymbol") {
+      CalibratorMetnoSymbol* c = new CalibratorMetnoSymbol(iOptions);
+
+      return c;
+   }
    else {
       Util::error("Could not instantiate calibrator with name '" + iName + "'");
       return NULL;
@@ -246,6 +251,7 @@ std::string Calibrator::getDescriptions() {
    ss << CalibratorDiagnose::description() << std::endl;
    ss << CalibratorGaussian::description() << std::endl;
    ss << CalibratorKriging::description() << std::endl;
+   ss << CalibratorMetnoSymbol::description() << std::endl;
    ss << CalibratorNeighbourhood::description() << std::endl;
    ss << CalibratorMask::description() << std::endl;
    ss << CalibratorPhase::description() << std::endl;
