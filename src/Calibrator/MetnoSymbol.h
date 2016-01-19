@@ -12,13 +12,15 @@ class CalibratorMetnoSymbol : public Calibrator {
       static std::string description();
       std::string name() const {return "symbol";};
       bool requiresParameterFile() const {return false;};
-      int getSymbol(int iNumberOfDrops, int iCloudyness) const;
+      int getSymbol(int iNumberOfDrops, int iCloudyness, int iPhase) const;
    private:
       bool calibrateCore(File& iFile, const ParameterFile* iParameterFile) const;
       int getNumberOfDrops(float iPrecip) const;
       int getCloudyness(float iCloudCover) const;
+      int getPhase(float iTemperature) const;
       std::vector<float> mPrecipThresholds;
       std::vector<float> mCloudThresholds;
+      std::vector<float> mTemperatureThresholds;
       weather_symbol::Factory mFactory;
 };
 #endif

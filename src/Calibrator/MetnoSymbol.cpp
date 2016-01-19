@@ -23,6 +23,14 @@ CalibratorMetnoSymbol::CalibratorMetnoSymbol(const Options& iOptions) :
    if(mCloudThresholds.size() != 3) {
       Util::error("Number of cloud thresholds must be 3");
    }
+
+   if(!iOptions.getValues("temperatureThresholds", mTemperatureThresholds)) {
+      mCloudThresholds.push_back(273.15);
+      mCloudThresholds.push_back(274.15);
+   }
+   if(mCloudThresholds.size() != 2) {
+      Util::error("Number of temperature thresholds must be 2");
+   }
 }
 bool CalibratorMetnoSymbol::calibrateCore(File& iFile, const ParameterFile* iParameterFile) const {
    int nLat = iFile.getNumLat();
@@ -48,12 +56,10 @@ bool CalibratorMetnoSymbol::calibrateCore(File& iFile, const ParameterFile* iPar
                float cloud = cloudField(i,j,e);
                float symbol = Util::MV;
                if(Util::isValid(t2m) && Util::isValid(precip) && Util::isValid(cloud)) {
-                  // Calculate number of drops
                   int numberOfDrops = getNumberOfDrops(precip);
-
-                  // Calculate cloud cover
-                  float cloudCover = getCloudyness(cloud);
-                  symbol = getSymbol(numberOfDrops, cloudCover);
+                  float cloudCover  = getCloudyness(cloud);
+                  int phase         = getPhase(t2m);
+                  symbol = getSymbol(numberOfDrops, cloudCover, phase);
                }
                symbolField(i,j,e) = symbol;
             }
@@ -63,9 +69,16 @@ bool CalibratorMetnoSymbol::calibrateCore(File& iFile, const ParameterFile* iPar
    return true;
 }
 
-int CalibratorMetnoSymbol::getSymbol(int iNumberOfDrops, int iCloudyness) const {
-   return mFactory.getCode_(iCloudyness, iNumberOfDrops);
-   return iNumberOfDrops + iCloudyness * 10;
+int CalibratorMetnoSymbol::getSymbol(int iNumberOfDrops, int iCloudyness, int iPhase) const {
+   return mFactory.getCode_(iCloudyness, iNumberOfDrops, iPhase);
+}
+int CalibratorMetnoSymbol::getPhase(float iTemperature) const {
+   int phase = 0;
+   if(iTemperature < mTemperatureThresholds[0])
+      phase = 2;
+   else if(iTemperature < mTemperatureThresholds[1])
+      phase = 1;
+   return phase;
 }
 int CalibratorMetnoSymbol::getNumberOfDrops(float iPrecip) const {
    int numberOfDrops = Util::MV;
@@ -101,5 +114,6 @@ std::string CalibratorMetnoSymbol::description() {
    ss << Util::formatDescription("-c metnoSymbol", "Adds the MET Norway symbol to the file.") << std::endl;
    ss << Util::formatDescription("   precipThresholds=0.5,1,2", "Precipitation thresholds (in mm) for 1, 2, and 3 drops respectively.") << std::endl;
    ss << Util::formatDescription("   cloudThresholds=13,38,86", "Cloud cover thresholds (in %) for light cloud, partly cloudy, and cloudy respectively.") << std::endl;
+   ss << Util::formatDescription("   temperatureThresholds=273.15,274.15", "Thresholds between snow, sleet, and rain respectively.") << std::endl;
    return ss.str();
 }
