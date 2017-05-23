@@ -25,10 +25,10 @@ CalibratorMetnoSymbol::CalibratorMetnoSymbol(const Options& iOptions) :
    }
 
    if(!iOptions.getValues("temperatureThresholds", mTemperatureThresholds)) {
-      mCloudThresholds.push_back(273.15);
-      mCloudThresholds.push_back(274.15);
+      mTemperatureThresholds.push_back(273.15);
+      mTemperatureThresholds.push_back(274.15);
    }
-   if(mCloudThresholds.size() != 2) {
+   if(mTemperatureThresholds.size() != 2) {
       Util::error("Number of temperature thresholds must be 2");
    }
 }
