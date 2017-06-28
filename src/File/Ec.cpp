@@ -161,7 +161,10 @@ FieldPtr FileEc::getFieldCore(std::string iVariable, int iTime) const {
    size_t start[5] = {iTime, 0, 0, 0, 0};
    size_t size = 1*1*nEns*nLat*nLon;
    float* values = new float[size];
+   double s = Util::clock();
    nc_get_vara_float(mFile, var, start, count, values);
+   double end = Util::clock();
+   std::cout << " nc_get_vara_float: " << end - s << std::endl;
    float MV = getMissingValue(var);
 
    float offset = getOffset(var);
@@ -186,6 +189,8 @@ FieldPtr FileEc::getFieldCore(std::string iVariable, int iTime) const {
       }
    }
    delete[] values;
+   end = Util::clock();
+   std::cout << " nc_get_vara_float + reading: " << end - s << std::endl;
    return field;
 }
 
