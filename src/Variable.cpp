@@ -339,6 +339,10 @@ std::string Variable::getUnits(Type iType) {
          return "K";
       case TD:
          return "K";
+      case Tlevel0:
+         return "K";
+      case Tlevel1:
+         return "K";
       case Precip:
          return "kg/m^2";
       case PrecipAcc:
