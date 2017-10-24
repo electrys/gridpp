@@ -47,6 +47,11 @@ bool CalibratorDiagnose::calibrateCore(File& iFile, const ParameterFile* iParame
       requiredVariables.push_back(Variable::T);
       requiredVariables.push_back(Variable::RH);
    }
+   else if(mOutputVariable == Variable::TW) {
+      requiredVariables.push_back(Variable::T);
+      requiredVariables.push_back(Variable::RH);
+      requiredVariables.push_back(Variable::P);
+   }
    else {
       std::stringstream ss;
       ss << "Cannot diagnose " << Variable::getTypeName(mOutputVariable)
@@ -191,6 +196,22 @@ bool CalibratorDiagnose::calibrateCore(File& iFile, const ParameterFile* iParame
             }
          }
       }
+      // Diagnose TW from T, RH, and P
+      else if(mOutputVariable == Variable::TW) {
+         const Field& fieldT = *iFile.getField(Variable::T, t);
+         const Field& fieldRH = *iFile.getField(Variable::RH, t);
+         const Field& fieldP = *iFile.getField(Variable::P, t);
+         #pragma omp parallel for
+         for(int i = 0; i < nLat; i++) {
+            for(int j = 0; j < nLon; j++) {
+               for(int e = 0; e < nEns; e++) {
+                  if(Util::isValid(fieldT(i,j,e)) && Util::isValid(fieldRH(i,j,e))) {
+                     output(i,j,e) = RH2dewpoint(fieldT(i,j,e), fieldRH(i,j,e));
+                  }
+               }
+            }
+         }
+      }
       else {
          // This part should never happen, since it should have been caught ealier
          std::stringstream ss;
@@ -249,6 +270,32 @@ float CalibratorDiagnose::RH2dewpoint(float iTemperature, float iRelativeHumidit
       // float e  = iRelativeHumidity*(es);
       // float td = 1/(1/273.15 - 1.844e-4*log(e/0.611));
       // return td;
+   }
+   else
+      return Util::MV;
+}
+
+float CalibratorDiagnose::RH2wetbulb(float iTemperature, float iRelativeHumidity, float iPressure) {
+   if(Util::isValid(iTemperature) && Util::isValid(iRelativeHumidity) && Util::isValid(iPressure)) {
+      // Taken from  https://github.com/WFRT/Comps/blob/master/src/Variables/TWet.cpp
+      float tempC = iTemperature - 273.15;
+      float e = (iRelativeHumidity)*0.611*exp( (17.63 * tempC) / (tempC + 243.04) );
+      if(e < 1e-9) {
+         // Extremely low humidity, set a lower bound for the TWet value
+         return Variable::getMin(Variable::TW);
+      }
+      float tdC = (116.9 + 243.04 * log( e ))/(16.78-log( e ));
+      float td = tdC + 273.15;
+      float gamma = 0.00066 * (iPressure / 1000);
+      float delta = (4098*e)/pow(tdC+243.04,2);
+      float TWetC = (gamma * tempC + delta * tdC)/(gamma + delta);
+      float TWet  = TWetC + 273.15;
+      if(!Util::isValid(e) || !Util::isValid(tdC) || !Util::isValid(gamma) || !Util::isValid(delta) || !Util::isValid(TWet)) {
+         std::stringstream ss;
+         ss << "Invalid TWet values (T, Rh, P, e, tdC, gamma, delta, TWet): " << iTemperature << " " << iRelativeHumidity << " " << iPressure << " " << e << " " << tdC << " " << gamma << " " << delta << " " << TWet << std::endl;
+         Util::warning(ss.str());
+      }
+      return TWet;
    }
    else
       return Util::MV;

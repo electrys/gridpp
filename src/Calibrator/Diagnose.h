@@ -13,6 +13,8 @@ class CalibratorDiagnose : public Calibrator {
       static float dewpoint2RH(float iTemperature, float iDewPointTemperature);
       // Temperature in K, RH in [0,1], Returns TD in K
       static float RH2dewpoint(float iTemperature, float iRelativeHumidity);
+      // Temperature in K, RH in [0,1], Pressure in Pa, Returns TW in K
+      static float RH2wetbulb(float iTemperature, float iRelativeHumidity, float iPressure);
    private:
       // Data needed for dewpoint to RH conversion
       static float mEwt[41];

@@ -70,6 +70,14 @@ namespace {
       EXPECT_FLOAT_EQ(Util::MV, CalibratorDiagnose::RH2dewpoint(Util::MV, 0.9));
       EXPECT_FLOAT_EQ(Util::MV, CalibratorDiagnose::RH2dewpoint(273.15, Util::MV));
    }
+   TEST_F(TestCalibratorDiagnose, RH2wetbulb) {
+      EXPECT_FLOAT_EQ(Util::MV, CalibratorDiagnose::RH2wetbulb(Util::MV, 0.9, 101000));
+      EXPECT_FLOAT_EQ(Util::MV, CalibratorDiagnose::RH2wetbulb(273, Util::MV, 101000));
+      EXPECT_FLOAT_EQ(Util::MV, CalibratorDiagnose::RH2wetbulb(273, 0.9, Util::MV));
+      EXPECT_FLOAT_EQ(282.34693251, CalibratorDiagnose::RH2wetbulb(283.15, 0.9, 101325));
+      EXPECT_FLOAT_EQ(270.28921407, CalibratorDiagnose::RH2wetbulb(273.15, 0.3, 101325));
+      EXPECT_FLOAT_EQ(277.35488187, CalibratorDiagnose::RH2wetbulb(283.15, 0.3, 80000));
+   }
    TEST_F(TestCalibratorDiagnose, both) {
       // EXPECT_FLOAT_EQ(0.9, CalibratorDiagnose::dewpoint2RH(273.15, CalibratorDiagnose::RH2dewpoint(273.15, 0.9)));
       // EXPECT_FLOAT_EQ(1, CalibratorDiagnose::dewpoint2RH(273.15, CalibratorDiagnose::RH2dewpoint(273.15, 1)));

@@ -319,6 +319,9 @@ std::string FileEc::getVariableName(Variable::Type iVariable) const {
    else if(iVariable == Variable::TD) {
       return "dew_point_temperature_2m";
    }
+   else if(iVariable == Variable::TW) {
+      return "wet_bulb_temperature_2m";
+   }
    else if(iVariable == Variable::Tlevel0) {
       return "air_temperature_ml";
    }

@@ -33,6 +33,8 @@ std::string Variable::getTypeName(Type iType) {
       return "TMax";
    else if(iType == TD)
       return "TD";
+   else if(iType == TW)
+      return "TW";
    else if(iType == U)
       return "U";
    else if(iType == Xwind)
@@ -98,6 +100,8 @@ Variable::Type Variable::getType(std::string iName) {
       return TMax;
    else if(iName == "TD")
       return TD;
+   else if(iName == "TW")
+      return TW;
    else if(iName == "U")
       return U;
    else if(iName == "Xwind")
@@ -138,6 +142,7 @@ std::string Variable::getDescriptions() {
    ss << Util::formatDescription("-v TMin", "Minimum temperature") << std::endl;
    ss << Util::formatDescription("-v TMax", "Maximum temperature") << std::endl;
    ss << Util::formatDescription("-v TD", "Dew point temperature") << std::endl;
+   ss << Util::formatDescription("-v TW", "Wet bulb temperature") << std::endl;
    ss << Util::formatDescription("-v Tlevel0", "Temperature lowest model level") << std::endl;
    ss << Util::formatDescription("-v Tlevel1", "Temperature second lowest model level") << std::endl;
    ss << Util::formatDescription("-v Precip", "Hourly precip") << std::endl;
@@ -211,6 +216,8 @@ float Variable::getMin(Type iType) {
          return 0;
       case TD:
          return 0;
+      case TW:
+         return 0;
       case Tlevel0:
          return 0;
       case Tlevel1:
@@ -276,6 +283,8 @@ float Variable::getMax(Type iType) {
          return Util::MV;
       case TD:
          return Util::MV;
+      case TW:
+         return Util::MV;
       case Tlevel0:
          return Util::MV;
       case Tlevel1:
@@ -339,6 +348,8 @@ std::string Variable::getUnits(Type iType) {
       case TMax:
          return "K";
       case TD:
+         return "K";
+      case TW:
          return "K";
       case Tlevel0:
          return "K";
@@ -404,6 +415,8 @@ std::string Variable::getStandardName(Type iType) {
          return "air_temperature";
       case TD:
          return "dew_point_temperature";
+      case TW:
+         return "wet_bulb_temperature";
       case Tlevel0:
          return "air_temperature";
       case Tlevel1:
