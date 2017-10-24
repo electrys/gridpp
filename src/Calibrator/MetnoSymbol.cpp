@@ -16,9 +16,9 @@ CalibratorMetnoSymbol::CalibratorMetnoSymbol(const Options& iOptions) :
    }
 
    if(!iOptions.getValues("cloudThresholds", mCloudThresholds)) {
-      mCloudThresholds.push_back(13);
-      mCloudThresholds.push_back(38);
-      mCloudThresholds.push_back(86);
+      mCloudThresholds.push_back(0.13);
+      mCloudThresholds.push_back(0.38);
+      mCloudThresholds.push_back(0.86);
    }
    if(mCloudThresholds.size() != 3) {
       Util::error("Number of cloud thresholds must be 3");
