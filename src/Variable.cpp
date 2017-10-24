@@ -169,6 +169,7 @@ std::string Variable::getDescriptions() {
 std::vector<Variable::Type> Variable::getAllVariables() {
    std::vector<Type> variables;
    variables.push_back(Variable::T);
+   variables.push_back(Variable::TD);
    variables.push_back(Variable::Tlevel0);
    variables.push_back(Variable::Tlevel1);
    variables.push_back(Variable::PrecipAcc);
