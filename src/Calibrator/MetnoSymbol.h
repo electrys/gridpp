@@ -22,5 +22,6 @@ class CalibratorMetnoSymbol : public Calibrator {
       std::vector<float> mCloudThresholds;
       std::vector<float> mTemperatureThresholds;
       weather_symbol::Factory mFactory;
+      Variable::Type mTemperatureVariable;
 };
 #endif

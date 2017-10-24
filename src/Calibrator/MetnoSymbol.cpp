@@ -5,7 +5,13 @@
 #include "../ParameterFile/ParameterFile.h"
 CalibratorMetnoSymbol::CalibratorMetnoSymbol(const Options& iOptions) :
       Calibrator(iOptions),
+      mTemperatureVariable(Variable::T),
       mFactory(weather_symbol::Factory(1)) {
+
+   std::string temperatureVariableName;
+   if(iOptions.getValue("temperatureVariable", temperatureVariableName)) {
+      mTemperatureVariable = Variable::getType(temperatureVariableName);
+   }
    if(!iOptions.getValues("precipThresholds", mPrecipThresholds)) {
       mPrecipThresholds.push_back(0.5);
       mPrecipThresholds.push_back(1);
@@ -42,7 +48,7 @@ bool CalibratorMetnoSymbol::calibrateCore(File& iFile, const ParameterFile* iPar
    vec2 elevs = iFile.getElevs();
 
    for(int t = 0; t < nTime; t++) {
-      Field& t2mField = *iFile.getField(Variable::T, t);
+      Field& t2mField = *iFile.getField(mTemperatureVariable, t);
       Field& precipField = *iFile.getField(Variable::Precip, t);
       Field& cloudField = *iFile.getField(Variable::Cloud, t);
       Field& symbolField = *iFile.getField(Variable::Symbol, t);
@@ -112,6 +118,7 @@ int CalibratorMetnoSymbol::getCloudyness(float iCloudCover) const {
 std::string CalibratorMetnoSymbol::description() {
    std::stringstream ss;
    ss << Util::formatDescription("-c metnoSymbol", "Adds the MET Norway symbol to the file.") << std::endl;
+   ss << Util::formatDescription("   temperatureVariable=T", "Which variable to use as the temperature? Good options include 'T', 'Twet'.") << std::endl;
    ss << Util::formatDescription("   precipThresholds=0.5,1,2", "Precipitation thresholds (in mm) for 1, 2, and 3 drops respectively.") << std::endl;
    ss << Util::formatDescription("   cloudThresholds=13,38,86", "Cloud cover thresholds (in %) for light cloud, partly cloudy, and cloudy respectively.") << std::endl;
    ss << Util::formatDescription("   temperatureThresholds=273.15,274.15", "Thresholds between snow, sleet, and rain respectively.") << std::endl;
